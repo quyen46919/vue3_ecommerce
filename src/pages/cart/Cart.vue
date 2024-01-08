@@ -1,20 +1,21 @@
 <template>
-  <!-- breadcrum -->
-  <div class="py-4 container flex gap-3 items-center">
-    <a href="index.html" class="text-primary text-base">
-      <i class="fas fa-home"></i>
-    </a>
-    <span class="text-sm text-gray-400"><i class="fas fa-chevron-right"></i></span>
-    <p class="text-gray-600 font-medium uppercase">Shopping Cart</p>
-  </div>
-  <!-- breadcrum end -->
+  <Breadcrum v-bind:listRoute="[{ name: 'Shopping cart', url: '/filter' }]" />
 
   <!-- cart wrapper -->
   <div class="container lg:grid grid-cols-12 gap-6 items-start pb-16 pt-4">
     <!-- product cart -->
     <div class="xl:col-span-9 lg:col-span-8">
+      <!-- empty cart -->
+      <div v-if="cart.length === 0">
+        <div class="mt-10 text-center">
+          <h3 class="text-2xl text-primary">Your cart is empty (´•︵•`)</h3>
+          <br />
+          <RouterLink to="/" class="text-gray-600 underline">Back to homepage</RouterLink>
+        </div>
+      </div>
+      <!-- end empty cart -->
       <!-- cart title -->
-      <div class="bg-gray-200 py-2 pl-12 pr-20 xl:pr-28 mb-4 hidden md:flex">
+      <div v-if="cart.length > 0" class="bg-gray-200 py-2 pl-12 pr-20 xl:pr-28 mb-4 hidden md:flex">
         <p class="text-gray-600 text-center">Product</p>
         <p class="text-gray-600 text-center ml-auto mr-16 xl:mr-24">Quantity</p>
         <p class="text-gray-600 text-center">Total</p>
@@ -67,9 +68,11 @@
             </div>
           </div>
           <!-- cart quantity end -->
-          <div class="ml-auto md:ml-0">
-            <p class="text-primary text-lg font-semibold">
-              ${{ Number((item?.price - (item?.price * item?.discount) / 100).toFixed(2)) * item?.targetQuantity }}
+          <div class="w-20 flex-shrink-0 ml-auto md:ml-0">
+            <p class="text-primary text-lg font-semibold text-center">
+              ${{
+                Number(Number(item?.price - (item?.price * item?.discount) / 100) * item?.targetQuantity).toFixed(2)
+              }}
             </p>
           </div>
           <div class="text-gray-600 hover:text-primary cursor-pointer" @click="removeItem(item?.id)">
@@ -136,6 +139,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useCart } from '@/store/cartStore'
+import Breadcrum from '@/components/Breadcrum.vue'
 
 const cartStore = useCart()
 const cart = computed(() => cartStore.getCart)

@@ -1,13 +1,5 @@
 <template>
-  <!-- breadcrum -->
-  <div class="py-4 container flex gap-3 items-center">
-    <a href="index.html" class="text-primary text-base">
-      <i class="fas fa-home"></i>
-    </a>
-    <span class="text-sm text-gray-400"><i class="fas fa-chevron-right"></i></span>
-    <p class="text-gray-600 font-medium uppercase">My Account</p>
-  </div>
-  <!-- breadcrum end -->
+  <Breadcrum v-bind:listRoute="[{ name: 'Account', url: '/account' }, { name: 'Wishlist' }]" />
 
   <!-- account wrapper -->
   <div class="container lg:grid grid-cols-12 items-start gap-6 pt-4 pb-16">
@@ -15,6 +7,15 @@
 
     <!-- account content -->
     <div class="col-span-9 mt-6 lg:mt-0 space-y-4">
+      <!-- empty cart -->
+      <div v-if="wishlist.length === 0">
+        <div class="mt-10 text-center">
+          <h3 class="text-2xl text-primary">Your wishlist is empty (´•︵•`)</h3>
+          <br />
+          <RouterLink to="/" class="text-gray-600 underline">Back to homepage</RouterLink>
+        </div>
+      </div>
+      <!-- end empty cart -->
       <RowCard
         v-for="card in wishlist"
         :key="card.id"
@@ -32,6 +33,7 @@
 <script setup lang="ts">
 import ProfileMenu from '@/components/ProfileMenu.vue'
 import RowCard from '@/components/RowCard.vue'
+import Breadcrum from '@/components/Breadcrum.vue'
 import { useWishList } from '@/store/wishlistStore'
 import { computed } from 'vue'
 

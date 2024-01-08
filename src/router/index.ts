@@ -90,7 +90,9 @@ const router = createRouter({
   ],
   scrollBehavior() {
     return { top: 0 }
-  }
+  },
+  linkActiveClass: 'text-primary',
+  linkExactActiveClass: 'text-primary'
 })
 
 router.beforeEach((to, _, next) => {

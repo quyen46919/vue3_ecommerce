@@ -1,13 +1,10 @@
 <template>
-  <!-- breadcrum -->
-  <div class="py-4 container flex gap-3 items-center">
-    <a href="index.html" class="text-primary text-base">
-      <i class="fas fa-home"></i>
-    </a>
-    <span class="text-sm text-gray-400"><i class="fas fa-chevron-right"></i></span>
-    <p class="text-gray-600 font-medium uppercase">My Account</p>
-  </div>
-  <!-- breadcrum end -->
+  <Breadcrum
+    v-bind:listRoute="[
+      { name: 'Account', url: '/account' },
+      { name: 'Manage your address', url: 'manage-address' }
+    ]"
+  />
 
   <!-- account wrapper -->
   <div class="container lg:grid grid-cols-12 items-start gap-6 pt-4 pb-16">
@@ -88,4 +85,5 @@
 
 <script setup lang="ts">
 import ProfileMenu from '@/components/ProfileMenu.vue'
+import Breadcrum from '@/components/Breadcrum.vue'
 </script>

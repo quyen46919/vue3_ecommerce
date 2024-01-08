@@ -1,13 +1,5 @@
 <template>
-  <!-- breadcrum -->
-  <div class="py-4 container flex gap-3 items-center">
-    <a href="index.html" class="text-primary text-base">
-      <i class="fas fa-home"></i>
-    </a>
-    <span class="text-sm text-gray-400"><i class="fas fa-chevron-right"></i></span>
-    <p class="text-gray-600 font-medium uppercase">checkout</p>
-  </div>
-  <!-- breadcrum end -->
+  <Breadcrum v-bind:listRoute="[{ name: 'Shopping cart', url: '/cart' }, { name: 'Checkout' }]" />
 
   <!-- checkout wrapper -->
   <div class="container lg:grid grid-cols-12 gap-6 items-start pb-16 pt-4">
@@ -109,4 +101,6 @@
   <!-- checkout wrapper end -->
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Breadcrum from '@/components/Breadcrum.vue'
+</script>

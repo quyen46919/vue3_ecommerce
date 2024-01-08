@@ -1,26 +1,20 @@
 <template>
-  <!-- breadcrum -->
-  <div class="container py-4 flex justify-between">
-    <div class="flex gap-3 items-center">
-      <a href="index.html" class="text-primary text-base">
-        <i class="fas fa-home"></i>
-      </a>
-      <span class="text-sm text-gray-400"><i class="fas fa-chevron-right"></i></span>
-      <p class="text-gray-600 font-medium">Shop</p>
-    </div>
-  </div>
-  <!-- breadcrum end -->
+  <Breadcrum v-bind:listRoute="[{ name: 'Filter product' }]" />
 
   <!-- shop wrapper -->
   <div class="container grid lg:grid-cols-4 gap-6 pt-4 pb-16 items-start relative">
     <!-- sidebar -->
     <div
+      v-if="showFilterPanel"
       class="col-span-1 bg-white px-4 pt-4 pb-6 shadow rounded overflow-hidden absolute lg:static left-4 top-16 z-10 w-72 lg:w-full lg:block"
     >
       <div class="divide-gray-200 divide-y space-y-5 relative">
         <!-- category filter -->
         <div class="relative">
-          <div class="lg:hidden text-gray-400 hover:text-primary text-lg absolute right-0 top-0 cursor-pointer">
+          <div
+            class="lg:hidden text-gray-400 hover:text-primary text-lg absolute right-0 top-0 cursor-pointer"
+            @click="handleTogglePanel"
+          >
             <i class="fas fa-times"></i>
           </div>
           <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">Categories</h3>
@@ -221,6 +215,7 @@
       <div class="mb-4 flex items-center">
         <button
           class="bg-primary border border-primary text-white px-10 py-3 font-medium rounded uppercase hover:bg-transparent hover:text-primary transition lg:hidden text-sm mr-3 focus:outline-none"
+          @click="handleTogglePanel"
         >
           Filter
         </button>
@@ -280,7 +275,11 @@
 import allCards from '@/faker/index'
 import Card from '@/components/Card.vue'
 import RowCard from '@/components/RowCard.vue'
-import { ref } from 'vue'
+import Breadcrum from '@/components/Breadcrum.vue'
+import { computed, ref, watchEffect } from 'vue'
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+const breakpoints = useBreakpoints(breakpointsTailwind)
+const lgAndSmaller = computed(() => breakpoints.smallerOrEqual('lg'))
 
 const cardList = ref(allCards)
 
@@ -290,4 +289,17 @@ const targetDisplayType = ref<DisplayTypes>('col')
 const handleChangeDisplayType = (type: DisplayTypes) => {
   targetDisplayType.value = type
 }
+
+const showFilterPanel = ref(true)
+const handleTogglePanel = () => {
+  showFilterPanel.value = !showFilterPanel.value
+}
+
+watchEffect(() => {
+  if (lgAndSmaller.value.value) {
+    showFilterPanel.value = false
+  } else {
+    showFilterPanel.value = true
+  }
+})
 </script>

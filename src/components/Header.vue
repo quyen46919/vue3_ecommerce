@@ -17,9 +17,10 @@
           type="text"
           class="pl-12 w-full border border-r-0 border-primary py-3 px-3 rounded-l-md focus:ring-primary focus:border-primary"
           placeholder="search"
+          v-model="search"
         />
         <button
-          type="submit"
+          @click.prevent="handleSearch"
           class="bg-primary border border-primary text-white px-8 font-medium rounded-r-md hover:bg-transparent hover:text-primary transition"
         >
           Search
@@ -106,7 +107,7 @@
       <h3 class="text-xl font-semibold text-gray-700 mb-1 font-roboto pl-4 pt-4">Menu</h3>
       <div class="">
         <a href="index.html" class="block px-4 py-2 font-medium transition hover:bg-gray-100"> Home </a>
-        <a href="shop.html" class="block px-4 py-2 font-medium transition hover:bg-gray-100"> Shop </a>
+        <a href="shop.html" class="block px-4 py-2 font-medium transition hover:bg-gray-100"> Filter </a>
         <a href="#" class="block px-4 py-2 font-medium transition hover:bg-gray-100"> About Us </a>
         <roa href="#" class="block px-4 py-2 font-medium transition hover:bg-gray-100"> Contact Us </roa>
       </div>
@@ -120,7 +121,15 @@
 import logo from '@/assets/images/logo.svg'
 import { useWishList } from '@/store/wishlistStore'
 import { useCart } from '@/store/cartStore'
+import { ref } from 'vue'
+import router from '@/router'
 
 const wishlist = useWishList()
 const cart = useCart()
+
+const search = ref('')
+
+const handleSearch = () => {
+  router.push(`/filter?search=${search.value}`)
+}
 </script>

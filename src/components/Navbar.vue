@@ -32,7 +32,7 @@
         <div class="flex items-center justify-between flex-grow pl-12">
           <div class="flex items-center space-x-6 text-base capitalize">
             <RouterLink to="/" class="text-gray-200 hover:text-white transition">Home</RouterLink>
-            <RouterLink to="/filter" class="text-gray-200 hover:text-white transition">Shop</RouterLink>
+            <RouterLink to="/filter" class="text-gray-200 hover:text-white transition">Filter</RouterLink>
             <RouterLink to="/about-us" class="text-gray-200 hover:text-white transition">About us</RouterLink>
             <RouterLink to="/contact-us" class="text-gray-200 hover:text-white transition">Contact us</RouterLink>
           </div>

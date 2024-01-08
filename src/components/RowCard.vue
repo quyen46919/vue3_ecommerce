@@ -29,32 +29,33 @@
     <!-- cart content end -->
     <div class="">
       <p class="text-primary text-lg font-semibold">${{ discountedPrice }}</p>
+      <p class="text-md text-gray-400 font-roboto line-through">${{ props?.price }}</p>
     </div>
-    <div>
+    <div class="flex md:flex-col w-full md:w-fit justify-start md:items-end gap-1">
       <div
         v-if="!isAlreadyInCart"
-        class="max-w-44 min-w-44 ml-auto md:ml-0 block mb-1 px-6 py-2 text-center text-sm text-white bg-primary border border-primary rounded hover:bg-transparent hover:text-primary transition uppercase font-roboto font-medium cursor-pointer"
+        class="w-1/2 md:max-w-44 md:min-w-44 md:ml-0 block px-6 py-2 text-center text-sm text-white bg-primary border border-primary rounded hover:bg-transparent hover:text-primary transition uppercase font-roboto font-medium cursor-pointer"
         @click="handleAddToCart"
       >
         Add to cart
       </div>
       <div
         v-if="isAlreadyInCart"
-        class="max-w-44 min-w-44 ml-auto md:ml-0 block mb-1 px-6 py-2 text-center text-sm rounded hover:bg-transparent border border-primary text-primary transition uppercase font-roboto font-medium cursor-pointer"
+        class="w-1/2 md:max-w-44 md:min-w-44 md:ml-0 block md:mb-1 mb-0 px-6 py-2 text-center text-sm rounded hover:bg-transparent border border-primary text-primary transition uppercase font-roboto font-medium cursor-pointer"
         @click="handleRemoveFromCart"
       >
         Remove from cart
       </div>
       <div
         v-if="!isAlreadyInWishlist && props.showRemoveFromWishlist"
-        class="max-w-44 min-w-44 ml-auto md:ml-0 block px-6 py-2 text-center text-sm text-white bg-primary border border-primary rounded hover:bg-transparent hover:text-primary transition uppercase font-roboto font-medium cursor-pointer"
+        class="w-1/2 md:max-w-44 md:min-w-44 md:ml-0 block px-6 py-2 text-center text-sm text-white bg-primary border border-primary rounded hover:bg-transparent hover:text-primary transition uppercase font-roboto font-medium cursor-pointer"
         @click="handleAddToWishlist"
       >
         Add to wishlist
       </div>
       <div
         v-if="isAlreadyInWishlist && props.showRemoveFromWishlist"
-        class="max-w-44 min-w-44 ml-auto md:ml-0 block px-6 py-2 text-center text-primary border border-primary rounded hover:bg-transparent hover:text-primary transition uppercase font-roboto font-medium cursor-pointer"
+        class="w-1/2 md:max-w-44 md:min-w-44 md:ml-0 block md:mb-1 mb-0 px-6 py-2 text-center text-sm rounded hover:bg-transparent border border-primary text-primary transition uppercase font-roboto font-medium cursor-pointer"
         @click="handleRemoveFromWishList"
       >
         Remove from wishlist
@@ -90,7 +91,11 @@ type RowCardProps = Partial<CardProps> & {
 const props = defineProps<RowCardProps>()
 
 const discountedPrice = computed(() => {
-  return Number(props?.price || 0 - (props?.price || 0 * (props?.discount || 0)) / 100).toFixed(2)
+  if (props?.price && props?.discount) {
+    return Number(props?.price - (props?.price * props?.discount) / 100).toFixed(2)
+  } else {
+    return 0
+  }
 })
 
 const isAlreadyInCart = computed(() => {
