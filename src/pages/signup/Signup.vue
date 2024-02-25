@@ -7,23 +7,17 @@
       <form @submit.prevent="handleSubmit">
         <div class="space-y-4">
           <div>
-            <label class="text-gray-600 mb-2 block"> Full Name <span class="text-primary">*</span> </label>
-            <input type="text" class="input-box w-full" placeholder="John Doe" />
+            <label class="text-gray-600 mb-2 block"> User Name <span class="text-primary">*</span> </label>
+            <!-- Sử dụng v-model để liên kết ref và input -->
+            <input type="text" class="input-box w-full" placeholder="John Doe" required v-model="username" />
           </div>
           <div>
             <label class="text-gray-600 mb-2 block"> Email Address <span class="text-primary">*</span> </label>
-            <input type="email" class="input-box w-full" placeholder="example@mail.com" />
+            <input type="email" class="input-box w-full" placeholder="example@mail.com" required v-model="email" />
           </div>
           <div>
             <label class="text-gray-600 mb-2 block">Password <span class="text-primary">*</span></label>
-            <input type="password" class="input-box w-full" placeholder="type password" />
-          </div>
-          <div>
-            <label class="text-gray-600 mb-2 block"
-              >Confirm Password
-              <span class="text-primary">*</span>
-            </label>
-            <input type="password" class="input-box w-full" placeholder="confirm your password" />
+            <input type="password" class="input-box w-full" placeholder="type password" required v-model="password" />
           </div>
         </div>
         <div class="flex items-center mt-6">
@@ -72,10 +66,28 @@
 </template>
 
 <script setup lang="ts">
+import AuthAPI from '@/api/auth.api'
 import router from '@/router'
+import axios from 'axios'
+import { ref } from 'vue'
+// validate form using VeeValidate ...
+// https://vee-validate.logaretm.com/v3/
 
-const handleSubmit = (e: Event) => {
-  e.preventDefault()
-  router.push('/login')
+const username = ref('')
+const email = ref('')
+const password = ref('')
+
+const handleSubmit = async (e: Event) => {
+  const res = await AuthAPI.logup({
+    email: email.value,
+    username: username.value,
+    password: password.value
+  })
+  if ('id' in res) {
+    // show message
+  } else {
+    // show error
+  }
 }
+
 </script>

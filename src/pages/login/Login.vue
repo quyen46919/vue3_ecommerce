@@ -73,4 +73,5 @@ const handleSubmit = () => {
   authStore.login(user)
   router.push('/')
 }
+
 </script>
