@@ -235,13 +235,13 @@ import Breadcrum from '@/components/Breadcrum.vue'
 import { onMounted, computed, ref, watchEffect } from 'vue'
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
 import axios from 'axios'
+import DataAPI from '@/api/data.api'
 
 const breakpoints = useBreakpoints(breakpointsTailwind)
 const lgAndSmaller = computed(() => breakpoints.smallerOrEqual('lg'))
 
 const cardList = ref(allCards)
-const categories = ref([])
-const brands = ref([])
+
 
 type DisplayTypes = 'col' | 'row'
 const targetDisplayType = ref<DisplayTypes>('col')
@@ -263,11 +263,14 @@ watchEffect(() => {
   }
 })
 
+const categories = ref<{ id: string; name: string; count: number }[]>([])
+const brands = ref<{ id: string; name: string; count: number }[]>([])
+
 const fetchData = async () => {
   try {
-    const categoriesRes = await axios.get('http://localhost:3000/categories')
-    const brandsRes = await axios.get('http://localhost:3000/brands')
-
+    const categoriesRes = await axios.get("http://localhost:3000/categories")
+    const brandsRes = await axios.get("http://localhost:3000/brands")    
+  
     categories.value = categoriesRes.data
     brands.value = brandsRes.data
   } catch (error) {
