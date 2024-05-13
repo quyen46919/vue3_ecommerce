@@ -1,0 +1,14 @@
+{
+    "categories": [
+      { "id": 1, "name": "Bedroom", "count": 15 },
+      { "id": 2, "name": "Sofa", "count": 5 },
+      { "id": 3, "name": "Office", "count": 9 },
+      { "id": 4, "name": "Outdoor", "count": 19 }
+    ],
+    "brands": [
+      { "id": 1, "name": "Dominik", "count": 15 },
+      { "id": 2, "name": "Karl", "count": 18 },
+      { "id": 3, "name": "Maxing", "count": 9 },
+      { "id": 4, "name": "Ernest", "count": 12 }
+    ]
+}

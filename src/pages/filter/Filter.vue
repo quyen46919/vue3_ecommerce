@@ -19,34 +19,11 @@
           </div>
           <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">Categories</h3>
           <div class="space-y-2">
-            <!-- single category -->
-            <div class="flex items-center">
-              <input type="checkbox" id="Bedroom" class="text-primary focus:ring-0 rounded-sm cursor-pointer" />
-              <label for="Bedroom" class="text-gray-600 ml-3 cursor-pointer">Bedroom</label>
-              <div class="ml-auto text-gray-600 text-sm">(15)</div>
+            <div v-for="category in categories" :key="category.id" class="flex items-center">
+              <input type="checkbox" :id="category.name" class="text-primary focus:ring-0 rounded-sm cursor-pointer" />
+              <label :for="category.name" class="text-gray-600 ml-3 cursor-pointer">{{ category.name }}</label>
+              <div class="ml-auto text-gray-600 text-sm">({{ category.count }})</div>
             </div>
-            <!-- single category end -->
-            <!-- single category -->
-            <div class="flex items-center">
-              <input type="checkbox" id="Sofa" class="text-primary focus:ring-0 rounded-sm cursor-pointer" />
-              <label for="Sofa" class="text-gray-600 ml-3 cursor-pointer">Sofa</label>
-              <div class="ml-auto text-gray-600 text-sm">(05)</div>
-            </div>
-            <!-- single category end -->
-            <!-- single category -->
-            <div class="flex items-center">
-              <input type="checkbox" id="Office" class="text-primary focus:ring-0 rounded-sm cursor-pointer" />
-              <label for="Office" class="text-gray-600 ml-3 cursor-pointer">Office</label>
-              <div class="ml-auto text-gray-600 text-sm">(09)</div>
-            </div>
-            <!-- single category end -->
-            <!-- single category -->
-            <div class="flex items-center">
-              <input type="checkbox" id="Outdoor" class="text-primary focus:ring-0 rounded-sm cursor-pointer" />
-              <label for="Outdoor" class="text-gray-600 ml-3 cursor-pointer">Outdoor</label>
-              <div class="ml-auto text-gray-600 text-sm">(19)</div>
-            </div>
-            <!-- single category end -->
           </div>
         </div>
         <!-- category filter end -->
@@ -55,31 +32,10 @@
           <h3 class="text-xl text-gray-800 mb-3 uppercase font-medium">Brands</h3>
           <div class="space-y-2">
             <!-- single brand name -->
-            <div class="flex items-center">
-              <input type="checkbox" id="Dominik" class="text-primary focus:ring-0 rounded-sm cursor-pointer" />
-              <label for="Dominik" class="text-gray-600 ml-3 cursor-pointer">Dominik</label>
-              <div class="ml-auto text-gray-600 text-sm">(15)</div>
-            </div>
-            <!-- single brand name end -->
-            <!-- single brand name -->
-            <div class="flex items-center">
-              <input type="checkbox" id="Karl" class="text-primary focus:ring-0 rounded-sm cursor-pointer" />
-              <label for="Karl" class="text-gray-600 ml-3 cursor-pointer">Karl</label>
-              <div class="ml-auto text-gray-600 text-sm">(18)</div>
-            </div>
-            <!-- single brand name end -->
-            <!-- single brand name -->
-            <div class="flex items-center">
-              <input type="checkbox" id="Maxing" class="text-primary focus:ring-0 rounded-sm cursor-pointer" />
-              <label for="Maxing" class="text-gray-600 ml-3 cursor-pointer">Maxing</label>
-              <div class="ml-auto text-gray-600 text-sm">(09)</div>
-            </div>
-            <!-- single brand name end -->
-            <!-- single brand name -->
-            <div class="flex items-center">
-              <input type="checkbox" id="Ernest" class="text-primary focus:ring-0 rounded-sm cursor-pointer" />
-              <label for="Ernest" class="text-gray-600 ml-3 cursor-pointer">Ernest</label>
-              <div class="ml-auto text-gray-600 text-sm">(12)</div>
+            <div v-for="brand in brands" :key="brand.id" class="flex items-center">
+              <input type="checkbox" :id="brand.name" class="text-primary focus:ring-0 rounded-sm cursor-pointer" />
+              <label for="Dominik" class="text-gray-600 ml-3 cursor-pointer">{{ brand.name }}</label>
+              <div class="ml-auto text-gray-600 text-sm">{{ brand.count }}</div>
             </div>
             <!-- single brand name end -->
           </div>
@@ -276,12 +232,16 @@ import allCards from '@/faker/index'
 import Card from '@/components/Card.vue'
 import RowCard from '@/components/RowCard.vue'
 import Breadcrum from '@/components/Breadcrum.vue'
-import { computed, ref, watchEffect } from 'vue'
+import { onMounted, computed, ref, watchEffect } from 'vue'
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+import axios from 'axios'
+
 const breakpoints = useBreakpoints(breakpointsTailwind)
 const lgAndSmaller = computed(() => breakpoints.smallerOrEqual('lg'))
 
 const cardList = ref(allCards)
+const categories = ref([])
+const brands = ref([])
 
 type DisplayTypes = 'col' | 'row'
 const targetDisplayType = ref<DisplayTypes>('col')
@@ -301,5 +261,20 @@ watchEffect(() => {
   } else {
     showFilterPanel.value = true
   }
+})
+
+const fetchData = async () => {
+  try {
+    const categoriesRes = await axios.get('http://localhost:3000/categories')
+    const brandsRes = await axios.get('http://localhost:3000/brands')
+
+    categories.value = categoriesRes.data
+    brands.value = brandsRes.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+onMounted(() => {
+  fetchData()
 })
 </script>
