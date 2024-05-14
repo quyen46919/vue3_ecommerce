@@ -235,7 +235,7 @@ import Breadcrum from '@/components/Breadcrum.vue'
 import { onMounted, computed, ref, watchEffect } from 'vue'
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
 import axios from 'axios'
-import DataAPI from '@/api/data.api'
+
 
 const breakpoints = useBreakpoints(breakpointsTailwind)
 const lgAndSmaller = computed(() => breakpoints.smallerOrEqual('lg'))
