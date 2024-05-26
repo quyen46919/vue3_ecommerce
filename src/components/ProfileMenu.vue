@@ -8,7 +8,7 @@
       </div>
       <div>
         <p class="text-gray-600">Hello,</p>
-        <h4 class="text-gray-800 capitalize font-medium">{{ user?.userName }}</h4>
+        <h4 class="text-gray-800 capitalize font-medium">{{ user?.username }}</h4>
       </div>
     </div>
     <!-- account profile end -->

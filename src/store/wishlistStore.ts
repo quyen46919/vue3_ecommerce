@@ -9,7 +9,7 @@ export const useWishList = defineStore('wishlist', {
   state: () => ({ wishlist: [] } as WishListState),
   getters: {
     getLength: (state) => state.wishlist.length,
-    isAlreadyInWishlist: (state) => (id?: string) => state.wishlist.find((item) => item.id === id),
+    isAlreadyInWishlist: (state) => (id?: number) => state.wishlist.find((item) => item.id === id),
     getWishlist: (state) => state.wishlist
   },
   actions: {
@@ -17,7 +17,7 @@ export const useWishList = defineStore('wishlist', {
       if (!!item.id && this.isAlreadyInWishlist(item.id)) return
       this.wishlist.push(item)
     },
-    removeFromWishlist(id?: string) {
+    removeFromWishlist(id?: number) {
       if (!id) return
       this.wishlist = this.wishlist.filter((item) => item.id !== id)
     }

@@ -31,6 +31,7 @@
       <div class="space-x-4 flex items-center">
         <RouterLink to="/wishlist" class="block text-center text-gray-700 hover:text-primary transition relative">
           <span
+            v-if="user"
             class="absolute -right-0 -top-1 w-5 h-5 rounded-full flex items-center justify-center bg-primary text-white text-xs"
             >{{ wishlist.getLength }}</span
           >
@@ -105,8 +106,8 @@
       <!-- navlink -->
       <h3 class="text-xl font-semibold text-gray-700 mb-1 font-roboto pl-4 pt-4">Menu</h3>
       <div class="">
-        <a href="index.html" class="block px-4 py-2 font-medium transition hover:bg-gray-100"> Home </a>
-        <a href="shop.html" class="block px-4 py-2 font-medium transition hover:bg-gray-100"> Shop </a>
+        <a href="/" class="block px-4 py-2 font-medium transition hover:bg-gray-100"> Home </a>
+        <a href="#" class="block px-4 py-2 font-medium transition hover:bg-gray-100"> Shop </a>
         <a href="#" class="block px-4 py-2 font-medium transition hover:bg-gray-100"> About Us </a>
         <roa href="#" class="block px-4 py-2 font-medium transition hover:bg-gray-100"> Contact Us </roa>
       </div>
@@ -117,10 +118,15 @@
 </template>
 
 <script setup lang="ts">
+import {computed} from 'vue'
 import logo from '@/assets/images/logo.svg'
 import { useWishList } from '@/store/wishlistStore'
 import { useCart } from '@/store/cartStore'
+import { useAuth } from '@/store/authStore'
 
 const wishlist = useWishList()
 const cart = useCart()
+const auth = useAuth()
+const authStore = useAuth()
+const user = computed(() => authStore.isAuthenticated)
 </script>

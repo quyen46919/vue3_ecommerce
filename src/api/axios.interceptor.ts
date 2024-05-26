@@ -20,17 +20,14 @@ axiosClient.interceptors.request.use(async (config) => {
 })
 
 axiosClient.interceptors.response.use(
-  // Xử lý dữ liệu API trả về
   (response) => {
-    // Trường hợp thành công: 200, 201, 3xx
     if (response && response.data) {
       return response.data
     }
-    return response
+    return response?.data
   },
   (error) => {
-    // Trường hợp lỗi: 4xx, 5xx
-    throw error.response
+    throw error
   }
 )
 

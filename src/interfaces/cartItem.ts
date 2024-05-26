@@ -1,13 +1,14 @@
 interface CartItemProps {
-  id: string
+  id: number
   name: string
+  thumbnail: string
   imageList: string[]
   price: number
   discount: number
-  targetSize: string
-  targetColor: string
+  // targetSize: string
+  // targetColor: string
   targetQuantity: number
-  quantity: number
+  amount: number
 }
 
 export default CartItemProps

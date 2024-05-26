@@ -10,7 +10,7 @@ export const useCart = defineStore('cart', {
     getters: {
         getCart: (state) => state.cart,
         getLength: (state) => state.cart.length,
-        isAlreadyInCart: (state) => (id?: string) => {
+        isAlreadyInCart: (state) => (id?: number) => {
             if (!id) return;
             return state.cart.find((item) => item.id === id);
         },
@@ -21,27 +21,31 @@ export const useCart = defineStore('cart', {
             this.cart.push({
                 id: item.id,
                 name: item.name,
+                thumbnail: item.thumbnail,
                 imageList: item.imageList,
                 price: item.price,
                 discount: item.discount,
-                targetSize: item.targetSize || '',
-                targetColor: item.targetColor || '',
+                // targetSize: item.targetSize || '',
+                // targetColor: item.targetColor || '',
                 targetQuantity: item.targetQuantity || 1,
-                quantity: item.quantity,
+                amount: item.amount,
             });
         },
-        removeFromCart(id?: string) {
+        removeFromCart(id?: number) {
             if (!id) return;
             this.cart = this.cart.filter((item) => item.id !== id);
         },
-        increaseQuantity(id: string) {
+        increaseQuantity(id: number) {
             const item = this.cart.find((item) => item.id === id);
             if (item) item.targetQuantity++;
         },
-        decreaseQuantity(id: string) {
+        decreaseQuantity(id: number) {
             const item = this.cart.find((item) => item.id === id);
             if (item) item.targetQuantity--;
         },
+        clearCart() {
+            this.cart = []
+        } 
     },
     persist: true,
 });

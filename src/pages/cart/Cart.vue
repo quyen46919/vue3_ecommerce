@@ -22,7 +22,7 @@
       <!-- cart title end -->
 
       <!-- shipping carts -->
-      <div class="space-y-4">
+      <div v-if="cart.length" class="space-y-4">
         <!-- single cart -->
         <div
           class="flex items-center md:justify-between gap-4 md:gap-6 p-4 border border-gray-200 rounded flex-wrap md:flex-nowrap"
@@ -30,8 +30,8 @@
           :key="item.id"
         >
           <!-- cart image -->
-          <div class="w-32 flex-shrink-0">
-            <img :src="item?.imageList?.[0]" class="w-full" />
+          <div class="w-32 flex-shrink-0 ">
+            <img :src="item?.thumbnail" class="w-full max-h-[100px] object-cover" />
           </div>
           <!-- cart image end -->
           <!-- cart content -->
@@ -43,7 +43,7 @@
               {{ item?.name }}
             </RouterLink>
             <p class="text-primary font-semibold">
-              ${{ Number(item?.price - (item?.price * item?.discount) / 100).toFixed(2) }}
+              ${{ Number(item?.price - (item?.price * item?.discount) / 100).toFixed(1) }}
             </p>
             <p class="text-gray-500">Size: {{ item?.name }}</p>
           </div>
@@ -52,7 +52,7 @@
           <div class="flex border border-gray-300 text-gray-600 divide-x divide-gray-300">
             <div
               class="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none"
-              @click="handleChangeQuantity(item.id, 'decrement', item?.quantity)"
+              @click="handleChangeQuantity(item?.id, 'decrement', item?.amount)"
             >
               -
             </div>
@@ -61,7 +61,7 @@
             </div>
             <div
               class="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none"
-              @click="handleChangeQuantity(item.id, 'increment', item?.quantity)"
+              @click="handleChangeQuantity(item.id, 'increment', item?.amount)"
             >
               +
             </div>
@@ -69,7 +69,7 @@
           <!-- cart quantity end -->
           <div class="ml-auto md:ml-0">
             <p class="text-primary text-lg font-semibold">
-              ${{ Number((item?.price - (item?.price * item?.discount) / 100).toFixed(2)) * item?.targetQuantity }}
+              ${{ Number(Number((item?.price - (item?.price * item?.discount) / 100).toFixed(1)) * item?.targetQuantity).toFixed(1) }}
             </p>
           </div>
           <div class="text-gray-600 hover:text-primary cursor-pointer" @click="removeItem(item?.id)">
@@ -77,6 +77,9 @@
           </div>
         </div>
         <!-- single cart end -->
+      </div>
+      <div v-else>
+        No item in cart
       </div>
       <!-- shipping carts end -->
     </div>
@@ -122,6 +125,7 @@
       <!-- checkout -->
       <RouterLink
         to="checkout"
+        v-if="cart.length"
         class="bg-primary border border-primary text-white px-4 py-3 font-medium rounded-md uppercase hover:bg-transparent hover:text-primary transition text-sm w-full block text-center"
       >
         Process to checkout
@@ -143,12 +147,12 @@ const cart = computed(() => cartStore.getCart)
 const total = computed(() => {
   let total = 0
   cart.value.forEach((item) => {
-    total += Number((item?.price - (item?.price * item?.discount) / 100).toFixed(2)) * item?.targetQuantity
+    total += Number((item?.price - (item?.price * item?.discount) / 100).toFixed(1)) * item?.targetQuantity
   })
-  return total.toFixed(2)
+  return total.toFixed(1)
 })
 
-const handleChangeQuantity = (id: string, type: 'increment' | 'decrement', maxQuantity: number) => {
+const handleChangeQuantity = (id: number, type: 'increment' | 'decrement', maxQuantity: number) => {
   const index = cart.value.findIndex((item) => item.id === id)
   if (index !== -1) {
     const item = cart.value?.[index]?.targetQuantity
@@ -162,7 +166,7 @@ const handleChangeQuantity = (id: string, type: 'increment' | 'decrement', maxQu
   }
 }
 
-const removeItem = (id?: string) => {
+const removeItem = (id?: number) => {
   cartStore.removeFromCart(id)
 }
 </script>

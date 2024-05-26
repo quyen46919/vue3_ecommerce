@@ -69,7 +69,7 @@
 import AuthAPI from '@/api/auth.api'
 import router from '@/router'
 import axios from 'axios'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 // validate form using VeeValidate ...
 // https://vee-validate.logaretm.com/v3/
 
@@ -77,7 +77,7 @@ const username = ref('')
 const email = ref('')
 const password = ref('')
 
-const handleSubmit = async (e: Event) => {
+const handleSubmit = async () => {
   const res = await AuthAPI.logup({
     email: email.value,
     username: username.value,

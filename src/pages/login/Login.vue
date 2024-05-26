@@ -4,15 +4,28 @@
     <div class="max-w-lg mx-auto shadow px-6 py-7 rounded overflow-hidden">
       <h2 class="text-2xl uppercase font-medium mb-1">LOGIN</h2>
       <p class="text-gray-600 mb-6 text-sm">Login if you are a returing customer</p>
-      <form action="">
+      <div
+        v-if="errorMessage"
+        class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+        role="alert"
+      >
+        <span class="font-medium">{{ errorMessage }}</span>
+      </div>
+      <form @submit="handleSubmit">
         <div class="space-y-4">
           <div>
-            <label class="text-gray-600 mb-2 block"> Email Address <span class="text-primary">*</span> </label>
-            <input type="email" class="input-box w-full" placeholder="Press Submit is ok" />
+            <label class="text-gray-600 mb-2 block"> Username <span class="text-primary">*</span> </label>
+            <input type="text" class="input-box w-full" placeholder="Input your username" v-model="username" required />
           </div>
           <div>
             <label class="text-gray-600 mb-2 block">Password <span class="text-primary">*</span></label>
-            <input type="password" class="input-box w-full" placeholder="Press Submit is ok" />
+            <input
+              type="password"
+              class="input-box w-full"
+              placeholder="Input your password"
+              v-model="password"
+              required
+            />
           </div>
         </div>
         <div class="flex items-center justify-between mt-6">
@@ -26,7 +39,6 @@
           <button
             type="submit"
             class="block w-full py-2 text-center text-white bg-primary border border-primary rounded hover:bg-transparent hover:text-primary transition uppercase font-roboto font-medium"
-            @click="handleSubmit"
           >
             Login
           </button>
@@ -64,14 +76,34 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import router from '@/router'
 import user from '@/faker/auth/user'
 import { useAuth } from '@/store/authStore'
+import AuthAPI from '@/api/auth.api'
+
 const authStore = useAuth()
+const username = ref('')
+const password = ref('')
+const errorMessage = ref('')
 
-const handleSubmit = () => {
-  authStore.login(user)
-  router.push('/')
+const handleSubmit = async (e: any) => {
+  e.preventDefault()
+  if (!username || !password) return
+  errorMessage.value = ''
+  try {
+    const res: any = await AuthAPI.login({
+      username: username.value.toLowerCase(),
+      password: password.value.toLowerCase()
+    })
+    localStorage.setItem('token', JSON.stringify(res.access))
+    const profileRes: any = await AuthAPI.getProfile()
+    authStore.login(profileRes)
+    localStorage.setItem('auth', JSON.stringify(profileRes))
+    router.push('/')
+  } catch (err: any) {
+    console.log(err)
+    errorMessage.value = err?.response?.data?.detail || 'Username or password is not correct!'
+  }
 }
-
 </script>
