@@ -277,12 +277,13 @@
 </template>
 
 <script setup lang="ts">
-import allCards from '@/faker/index'
 import Card from '@/components/Card.vue'
 import RowCard from '@/components/RowCard.vue'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import ProductAPI from '@/api/product.api'
+import CardProps from '@/interfaces/card'
 
-const cardList = ref(allCards)
+const cardList = ref<CardProps[]>([])
 
 type DisplayTypes = 'col' | 'row'
 const targetDisplayType = ref<DisplayTypes>('col')
@@ -290,4 +291,16 @@ const targetDisplayType = ref<DisplayTypes>('col')
 const handleChangeDisplayType = (type: DisplayTypes) => {
   targetDisplayType.value = type
 }
+
+onMounted(async () => {
+  try {
+    const res = await ProductAPI.getRecommendProduct({
+      page_no: 1,
+      per_page: 12
+    })
+    cardList.value = res?.data?.list
+  } catch (error) {
+    console.error('Error fetching data:', error)
+  }
+})
 </script>

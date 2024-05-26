@@ -1,8 +1,8 @@
-interface Category {
-  id: string
+interface CategoryProps {
+  id: number
   name: string
-  image: string
-  url: string
+  thumbnail_url?: string
+  slug?: string
 }
 
-export default Category
+export default CategoryProps

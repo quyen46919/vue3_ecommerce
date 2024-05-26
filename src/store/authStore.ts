@@ -1,23 +1,29 @@
 import UserInfo from '@/interfaces/user'
 import { defineStore } from 'pinia'
+import { isEmpty } from 'lodash'
 
+interface User {
+  id: number
+  username: string
+  avatar?: string
+}
 export interface AuthInfo {
-  user?: UserInfo
+  user: User | null
   token?: string
 }
 
 export const useAuth = defineStore('auth', {
-  state: () => ({ user: undefined } as AuthInfo),
+  state: () => ({} as AuthInfo),
   getters: {
     getUser: (state) => state.user,
-    isAuthenticated: (state) => !!state.user?.id
+    isAuthenticated: (state) => isEmpty(state.user)
   },
   actions: {
-    login(user: UserInfo) {
+    login(user: User) {
       this.user = user
     },
     logout() {
-      this.user = undefined
+      this.user = null
     }
   },
   persist: true

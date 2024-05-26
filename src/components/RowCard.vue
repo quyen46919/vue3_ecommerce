@@ -5,7 +5,7 @@
   >
     <!-- cart image -->
     <div class="w-28 flex-shrink-0">
-      <img :src="props.imageList?.[0]" class="w-full" />
+      <img :src="props.thumbnail" class="w-full max-h-[100px]" />
     </div>
     <!-- cart image end -->
     <!-- cart content -->
@@ -18,12 +18,12 @@
       </RouterLink>
       <p v-if="props.showAvailability" class="text-gray-500 text-sm">
         Availability:
-        <span class="text-green-600" v-if="props?.inStock">In Stock</span>
-        <span class="text-red-600" v-if="!props?.inStock">Out of stock</span>
+        <span class="text-green-600" v-if="props?.amount && props?.amount > 0">In Stock</span>
+        <span class="text-red-600" v-else>Out of stock</span>
       </p>
       <div v-if="props.showRating" class="flex items-center">
-        <Rating :rating="props?.rating" />
-        <div class="text-xs text-gray-500 ml-3">({{ props?.reviewCount }})</div>
+        <Rating :rating="averageRating" />
+        <div class="text-xs text-gray-500 ml-3">({{ props?.comments?.length || 0 }})</div>
       </div>
     </div>
     <!-- cart content end -->
@@ -90,7 +90,13 @@ type RowCardProps = Partial<CardProps> & {
 const props = defineProps<RowCardProps>()
 
 const discountedPrice = computed(() => {
-  return Number(props?.price || 0 - (props?.price || 0 * (props?.discount || 0)) / 100).toFixed(2)
+  if (!props.price || !props.discount) return
+  return Number(props?.price - (props?.price * props?.discount) / 100).toFixed(1)
+})
+
+const averageRating = computed(() => {
+  if (!props.comments) return
+  return props.comments?.map((item) => item.rating)?.reduce((a, b) => a + b, 0) / props.comments?.length
 })
 
 const isAlreadyInCart = computed(() => {
@@ -103,15 +109,14 @@ const isAlreadyInWishlist = computed(() => {
 
 const handleAddToCart = () => {
   cartStore.addToCart({
-    id: props.id || '',
+    id: props.id as number,
     name: props.name || '',
     imageList: props.imageList || [],
+    thumbnail: props?.thumbnail || '',
     price: props.price || 0,
     discount: props.discount || 0,
-    targetSize: props.sizes?.[0].name || '',
-    targetColor: props.sizes?.[0].items?.[0].color || '',
     targetQuantity: 1,
-    quantity: props.sizes?.[0].items?.[0].quantity || 0
+    amount: props.amount || 0
   })
 }
 

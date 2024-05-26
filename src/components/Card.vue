@@ -3,7 +3,7 @@
   <div class="group rounded bg-white shadow overflow-hidden">
     <!-- product image -->
     <div class="relative">
-      <img :src="props?.imageList?.[0]" class="w-full" />
+      <img :src="props?.thumbnail" class="w-full max-h-[140px] object-cover" />
       <div
         class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition"
       >
@@ -34,7 +34,7 @@
     <div class="pt-4 pb-3 px-4">
       <RouterLink :to="'product-detail/' + props?.id">
         <h4
-          class="uppercase font-medium text-xl mb-2 text-gray-800 hover:text-primary transition overflow-hidden truncate"
+          class="font-medium text-xl mb-2 text-gray-800 hover:text-primary transition overflow-hidden truncate"
         >
           {{ props?.name }}
         </h4>
@@ -44,8 +44,8 @@
         <p class="text-sm text-gray-400 font-roboto line-through">${{ props?.price }}</p>
       </div>
       <div class="flex items-center">
-        <Rating :rating="props?.rating" />
-        <div class="text-xs text-gray-500 ml-3">({{ props?.reviewCount }})</div>
+        <Rating :rating="averageRating" />
+        <div class="text-xs text-gray-500 ml-3">({{ props?.comments?.length || 0 }})</div>
       </div>
     </div>
     <!-- product content end -->
@@ -81,11 +81,17 @@ const wishlistStore = useWishList()
 const props = defineProps<Partial<CardProps>>()
 
 const discountedPrice = computed(() => {
-  return Number(props?.price || 0 - (props?.price || 0 * (props?.discount || 0)) / 100).toFixed(2)
+  if (!props.price || !props.discount) return
+  return Number(props?.price - (props?.price * props?.discount) / 100).toFixed(1)
+})
+
+const averageRating = computed(() => {
+  if (!props.comments) return
+  return props.comments?.map((item) => item.rating)?.reduce((a, b) => a + b, 0) / props.comments?.length
 })
 
 const isAlreadyInCart = computed(() => {
-  return cartStore.isAlreadyInCart(props?.id)
+  return cartStore.isAlreadyInCart(props?.id as number)
 })
 
 const isAlreadyInWishlist = computed(() => {
@@ -98,15 +104,14 @@ const handleAddToWishlist = () => {
 
 const handleAddToCart = () => {
   cartStore.addToCart({
-    id: props.id || '',
+    id: props.id as number,
     name: props.name || '',
+    thumbnail: props.thumbnail || '',
     imageList: props.imageList || [],
     price: props.price || 0,
     discount: props.discount || 0,
-    targetSize: props.sizes?.[0].name || '',
-    targetColor: props.sizes?.[0].items?.[0].color || '',
     targetQuantity: 1,
-    quantity: props.sizes?.[0].items?.[0].quantity || 0
+    amount: props.amount || 0
   })
 }
 

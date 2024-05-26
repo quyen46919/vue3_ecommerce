@@ -32,7 +32,7 @@
         <div class="flex items-center justify-between flex-grow pl-12">
           <div class="flex items-center space-x-6 text-base capitalize">
             <RouterLink to="/" class="text-gray-200 hover:text-white transition">Home</RouterLink>
-            <RouterLink to="/filter" class="text-gray-200 hover:text-white transition">Shop</RouterLink>
+            <!-- <RouterLink to="/filter" class="text-gray-200 hover:text-white transition">Filter</RouterLink> -->
             <RouterLink to="/about-us" class="text-gray-200 hover:text-white transition">About us</RouterLink>
             <RouterLink to="/contact-us" class="text-gray-200 hover:text-white transition">Contact us</RouterLink>
           </div>
@@ -69,15 +69,18 @@ import { computed, ref } from 'vue'
 import router from '@/router'
 
 import { useAuth } from '@/store/authStore'
+import { isEmpty } from 'lodash'
 const authStore = useAuth()
 
-const isAuthenticated = computed(() => authStore.isAuthenticated)
+const user = (localStorage.getItem('auth') && (JSON.parse(localStorage.getItem('auth') || '') as any)) || {}
+const isAuthenticated = !isEmpty(user)
+console.log('isAuthenticated',isAuthenticated, 'user', JSON.parse(localStorage.getItem('auth') || ''))
 
 const url = computed(() => window.location.href)
 // ADD MORE AUTH ROUTE NAME HERE
 const isNotAuthPage = computed(() => !(url.value.includes('login') || url.value.includes('signup')))
 
-const isNotAuthPageAndNotAuthenticated = computed(() => !isAuthenticated.value && isNotAuthPage.value)
+const isNotAuthPageAndNotAuthenticated = computed(() => !isAuthenticated && isNotAuthPage.value)
 
 const handleLogin = () => {
   router.push('/login')
@@ -85,6 +88,9 @@ const handleLogin = () => {
 
 const handleLogout = () => {
   authStore.logout()
+  localStorage.removeItem('auth')
+  localStorage.removeItem('user')
+  localStorage.removeItem('token')
   router.push('/login')
 }
 
